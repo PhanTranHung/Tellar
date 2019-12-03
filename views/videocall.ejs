@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+
+</head>
+<body>
+<video src="" id="video" style="width: 400px; height: 400px"></video>
+<div id="logger"></div>
+<canvas id="preview" style="width: 400px; height: 400px"></canvas>
+
+
+</body>
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+
+     let canvas = document.getElementById('preview');
+     let context = canvas.getContext('2d');
+     let video = document.getElementById('video');
+     let logger = $('#logger');
+
+    context.width = 400;
+    context.height = 400;
+    canvas.width = 400;
+    canvas.height = 400;
+
+
+    function logg(msg) {
+        logger.text(msg);
+    }
+
+    function loadCam(stream) {
+        logg('Camera connected [OK]');
+        try{
+            video.src = window.URL.createObjectURL(stream);
+        } catch (e) {
+            video.srcObject = stream;
+            console.error(e);
+        }
+        video.play();
+    }
+
+    function loadFail() {
+        logg("Camera load failure [False]");
+    }
+
+    function viewVideo(video, context) {
+        context.drawImage(video, 0, 0, context.width, context.height);
+    }
+
+    $(document).ready(function () {
+        navigator.getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || msgGetUserMedia);
+
+        if (navigator.getUserMedia)
+            navigator.getUserMedia({video: true}, loadCam, loadFail);
+        setInterval(function () {
+            viewVideo(video, context);
+        }, 50);
+
+    });
+
+</script>
+
+<!--<script type="text/javascript" src="socket.io/socket.io.js"></script>-->
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>-->
+</html>

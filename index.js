@@ -9,14 +9,41 @@ app.use(express.static(__dirname + "/public"));
 app.set('views', 'views');
 app.set('view engine', 'ejs');
 
-app.listen(PORT, function () {
-
+http.listen(PORT, function () {
+    console.log("The server running on port:", PORT);
 });
 
 app.get('/', function (req, res) {
    res.render('index');
 });
 
-app.get('/call', function (req, res) {
+app.get('/login', function (req, res) {
+    res.render('login');
+});
+
+app.get('/videocall', function (req, res) {
     res.render('videocall');
 });
+
+let users = [];
+
+io.on('connection', function (socket) {
+    console.log('A user connected');
+    
+    socket.on('disconnect', function () {
+        console.log("User disconnected");
+    });
+
+    socket.on('client_send_chat_msg', function (data) {
+        console.log(data);
+        io.sockets.emit('server_send_chat_msg',data);
+    });
+
+    socket.on('client_sign_up', function (data) {
+        if (!data in users){
+            console.log('not in')
+        }
+    });
+
+});
+

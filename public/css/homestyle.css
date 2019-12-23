@@ -19,7 +19,7 @@ ul, li, ol {
 
 a {
     text-decoration: none;
-    color: black;
+    color: inherit;
 }
 
 input {
@@ -35,7 +35,7 @@ input {
 .head_bar {
     position: relative;
     height: 40px;
-    background-color: #4267b2;
+    background-color: #1a86a0;
 }
 
 .container {
@@ -159,7 +159,7 @@ input {
 }
 
 .label-o::before {
-    content: '\f099';
+    content: '\f002';
     display: inline-block;
     height: 16px;
     width: 16px;
@@ -319,7 +319,7 @@ input {
 }
 
 .border_r_1px_gray {
-    border-right: #c3c3c3
+    border-right: 1px solid #c3c3c3
 }
 
 .border_l_1px_gray {
@@ -408,6 +408,14 @@ input {
     background-color: #ffbb9f;
     width: fit-content;
     border-radius: 40px 40px 10px 40px;
+}
+
+.font-color-default{
+    color: #1a86a0 !important;
+}
+
+.fill-default-color{
+    fill: #1a86a0;
 }
 
 * {

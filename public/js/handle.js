@@ -1,10 +1,9 @@
 let socket = io();
 
 $(document).ready(function () {
-    if(sessionStorage.getItem('username') == undefined)
+    if (sessionStorage.getItem('username') == undefined)
         location.replace("login");
     let poster = $('#post_msg');
-
 
 
     let msg_area = $('#msg_area');
@@ -14,10 +13,10 @@ $(document).ready(function () {
     socket.emit('client_sign_up', my_name);
 
     poster.keypress(function (e) {
-        if (e.keyCode === 13){
+        if (e.keyCode === 13) {
             e.preventDefault(); // prevents page reloading\
             let val = poster.val().trim();
-            if (val != ''){
+            if (val != '') {
                 data = JSON.stringify({'username': my_name, 'msg': poster.val()});
                 socket.emit('client_send_chat_msg', data);
                 poster.val('');

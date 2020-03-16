@@ -3,9 +3,13 @@ let router = express.Router();
 let {check, validationResult} = require('express-validator');
 let User = require('../models/users');
 
+let sid = null;
+
 // middleware function to check for logged-in users
 let sessionChecker = (req, res, next) => {
-  if (req.session.user && req.cookies.user_sid) {
+  console.log(JSON.stringify(req.session));
+  console.log(JSON.stringify(req.cookies));
+  if (req.session.user === sid && req.cookies.user_sid) {
     res.redirect('/');
   } else {
     next();
@@ -14,6 +18,8 @@ let sessionChecker = (req, res, next) => {
 
 /* GET home page. */
 router.get('/', function (req, res) {
+  console.log(JSON.stringify(req.session));
+  console.log(JSON.stringify(req.cookies));
   if (req.session.user && req.cookies.user_sid) {
     res.render('index', {title: 'Poon', username: "Cu Hung ahihi", notification: 'Beta server'});
   } else {
@@ -55,7 +61,8 @@ router.post('/sign-in', [
       } else if (!user.validPassword(pass)) {
         res.redirect('/sign-in');
       } else {
-        req.session.user = user.dataValues();
+        sid = user.dataValues();
+        req.session.user = sid;
         res.redirect('/');
       }
     }
@@ -97,7 +104,7 @@ router.post('/sign-up', [
 
       let user = User.findOneUser(username);
       if (!user) {
-        User.createOneUser(username, email, pass);
+        User.createOneUser(username, email, pass, true);
         res.redirect('/sign-in')
       } else {
         req.session.errors = {user_exist: true};

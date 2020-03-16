@@ -1,50 +1,83 @@
-// let users = {};
 let md5 = require('md5');
-let users = {};
+let excuter = require('./Excuter');
 
 
 class user {
-    constructor(username, email, pass){
-        this.username = username;
-        this.email = email;
-        this.pass = pass;
-    }
+  constructor(username, email, pass, friends, cover_image_url) {
+    this.username = username;
+    this.email = email;
+    this.pass = pass;
 
-    get getUsername(){
-        return this.username;
-    }
+    if (cover_image_url)
+      this.cover_image_url = cover_image_url;
+    else
+      this.cover_image_url = null;
 
-    get getEmail(){
-        return this.email;
-    }
+    if (friends)
+      this.friends = friends;
+    else
+      this.friends = [];
+  }
 
-    validPassword(pass){
-        return pass === this.pass;
-    }
+  get getUsername() {
+    return this.username;
+  }
 
-    dataValues () {
-        return md5(this.username + this.pass);
-    }
+  get getEmail() {
+    return this.email;
+  }
+
+  validPassword(pass) {
+    return pass === this.pass;
+  }
+
+  dataValues() {
+    return md5(this.username + this.pass);
+  }
+
+  get getCover() {
+    return this.cover_image_url;
+  }
+
+  set setCover(image_url) {
+    this.cover_image_url = image_url
+  }
+}
+
+let data = excuter.readData('users.json')
+let users = renderUser(data);
+
+function renderUser(data) {
+  let a, temp = {};
+  for (a in data) {
+    temp[a] = new user(data[a].username, data[a].email, data[a].pass, data[a].friends, data[a].cover_image_url);
+  }
+  return temp;
 }
 
 // setup User models and its fields.
+
+function findOneUser(username) {
+  if (username in users) {
+    return users[username];
+  }
+  return false
+}
+
 /**
- * @param {dictionary} users
+ *
+ * @param {string} username
+ * @param {string} email
+ * @param {string} pass
+ * @param {boolean | null} save or not
  */
-function User() {
+function createOneUser(username, email, pass, save) {
+  users[username] = new user(username, email, pass);
+  if (save)
+    excuter.writeData(JSON.stringify(users), 'users.json');
 }
 
-function findOneUser(username){
-    if (username in users){
-        return users[username];
-    }
-    return false
-}
-
-function createOneUser(username, email, pass){
-    users[username] = new user(username, email, pass);
-}
 // export User models for use in other files.
-exports = module.exports = User;
+exports = module.exports;
 exports.findOneUser = findOneUser;
 exports.createOneUser = createOneUser;

@@ -331,7 +331,7 @@ input {
 }
 
 .msg_area {
-    height: 100%;
+    height: calc(100% -  56px);
 }
 
 .input_area {
